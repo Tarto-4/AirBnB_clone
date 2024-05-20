@@ -1,41 +1,39 @@
 #!/usr/bin/python3
-"""Entry point for the AirBnB command interpreter."""
+"""
+Entry point for the HBNB command interpreter.
+"""
 
 from cmd import Cmd
 
+
 class HBNBCommand(Cmd):
     """
-    Command interpreter class for the AirBnB clone.
+    HBNB command interpreter class.
     """
 
     prompt = "(hbnb) "
-    intro = "Welcome to the AirBnB command interpreter!"
+    intro = "Welcome to the HBNB command interpreter!"
 
-    def do_quit(self, arg):
-        """Quit command to exit the program.
-
-        Args:
-            arg (str, optional): Optional argument (ignored).
+    def do_quit(self, inp):
         """
+        Quits the command interpreter.
+        """
+        print("Quitting HBNB, come back soon!")
+        exit()
 
-        print("Bye!")
-        exit(0)
+    def do_EOF(self, inp):
+        """
+        Quits the command interpreter (same as quit).
+        """
+        print("Quitting HBNB, come back soon!")
+        exit()
 
     def emptyline(self):
-        """Handle empty lines by passing (without any action)."""
-
+        """
+        Handles empty lines by passing without execution.
+        """
         pass
 
-    def do_EOF(self, arg):
-        """EOF command to exit the program (same as quit).
 
-        Args:
-            arg (str, optional): Optional argument (ignored).
-        """
-
-        print("Bye!")
-        exit(0)
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     HBNBCommand().cmdloop()
