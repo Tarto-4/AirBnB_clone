@@ -1,12 +1,6 @@
-#!/usr/bin/python3
-
-"""
-This module defines the BaseModel class, which serves as the foundation for other models in your application.
-It provides common attributes and methods for consistent data management.
-"""
-
 from datetime import datetime
 import uuid
+from models.engine import file_storage
 
 
 class BaseModel:
@@ -26,6 +20,8 @@ class BaseModel:
                   Excludes the "__class__" key.
                 - If not provided, creates a new instance with a unique ID,
                   current datetime for created_at and updated_at.
+                - If it's a new instance (not from a dictionary representation),
+                  adds a call to the method new(self) on storage.
 
         Raises:
             ValueError: If both *args and **kwargs are provided.
@@ -43,6 +39,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = self.created_at
+            storage.new(self)
 
     def __str__(self):
         """
@@ -54,26 +51,10 @@ class BaseModel:
 
     def save(self):
         """
-        Updates the updated_at attribute of the object to the current datetime.
+        Updates the updated_at attribute of the object to the current datetime
+        and calls the storage.save() method to persist the object to the JSON file.
         """
 
         self.updated_at = datetime.now()
-
-    def to_dict(self):
-        """
-        Converts the object into a dictionary representation,
-        including all attributes and their values.
-
-        Returns:
-            dict: A dictionary representation of the object.
-                - Includes a "__class__" key with the class name.
-                - Converts "created_at" and "updated_at" to ISO format strings.
-        """
-
-        data = dict(self.__dict__)
-        data["__class__"] = self.__class__.__name__
-        for key, value in data.items():
-            if isinstance(value, datetime):
-                data[key] = value.isoformat()
-        return data
+        storage.
         
