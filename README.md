@@ -146,9 +146,7 @@ This project is a closed and contributions are not accepted at this time.
 
 ## Team
 
-[![Hunter Casbeer](https://avatars1.githubusercontent.com/u/6034810?v=3&s=230)](https://github.com/spacexengineer) | [![Elaine Yeung](https://avatars3.githubusercontent.com/u/23224088?v=3&s=230)](https://github.com/yeungegs)
-:---:|:---:
-[Hunter Casbeer](https://github.com/spacexengineer) <a target="_blank" href="https://twitter.com/spacex3ngineer"> <img src="https://cloud.githubusercontent.com/assets/23224088/24941419/2f3fc5ce-1eff-11e7-9ed3-85693579df09.png" height="20"></a> | [Elaine Yeung](https://github.com/yeungegs) <a target="_blank" href="https://twitter.com/egsy"> <img src="https://cloud.githubusercontent.com/assets/23224088/24941419/2f3fc5ce-1eff-11e7-9ed3-85693579df09.png" height="20"></a>
+ | [Thato Mongwe](https://github.com/tarto-4) <a target="_blank" href="https://twitter.com/egsy"> <img src="https://github.com/account" height="20"></a>
 
 ## Resources
 * Readme template from GitHub https://guides.github.com/features/wikis/
