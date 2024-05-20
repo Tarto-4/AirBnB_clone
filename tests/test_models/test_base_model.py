@@ -1,11 +1,11 @@
 #!/usr/bin/python3
-
 """
 Unit tests for the BaseModel class in models/base_model.py
 """
 
 import unittest
 from models.base_model import BaseModel
+from models.engine import file_storage
 
 
 class TestBaseModel(unittest.TestCase):
@@ -45,6 +45,24 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(bm.created_at, custom_dt)
         self.assertIsInstance(bm.updated_at, datetime)
         self.assertEqual(bm.updated_at, custom_dt)  # Both created_at and updated_at should be equal
+
+    def test_save_and_reload(self):
+        """
+        Tests saving a BaseModel instance, reloading from storage,
+        and verifying the retrieved instance.
+        """
+
+        bm = BaseModel()
+        bm.save()  # Save the instance to storage
+
+        storage.reload()  # Reload objects from storage
+
+        retrieved_bm = storage.all().get(f"{bm.__class__.__name__}.{bm.id}")  # Get from storage by key
+
+        self.assertIsInstance(retrieved_bm, BaseModel)
+        self.assertEqual(retrieved_bm.id, bm.id)
+        self.assertEqual(retrieved_bm.created_at, bm.created_at)
+        self.assertEqual(retrieved_bm.updated_at, bm.updated_at)
 
 if __name__ == "__main__":
     unittest.main()
