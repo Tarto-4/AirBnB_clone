@@ -20,7 +20,7 @@ Project completed for ALX.
 
 ### Description
 ![image](https://www.holbertonschool.com/assets/holberton-logo-1cc451260ca3cd297def53f2250a9794810667c7ca7b5fa5879a569a457bf16f.png)
-Project for [Holberton School](https://github.com/holbertonschool/). First step: Write a command interpreter to manage your AirBnB objects.
+Project for [ALX](https://github.com/holbertonschool/). First step: Write a command interpreter to manage your AirBnB objects.
 
 This is the first step towards building a full web application: an AirBnB clone. This first step is very important because everything built during this project will be used in all following projects: HTML/CSS templating, database storage, API, front-end integration...
 
@@ -86,11 +86,6 @@ For this project, you will create unit tests, not doctest:
 - How to handle named arguments in a function
 
 ## Project Breakdown
-
-### Status
-[![Stories in Ready](https://badge.waffle.io/yeungegs/AirBnB_clone.png?label=ready&title=Ready)](https://waffle.io/yeungegs/AirBnB_clone?utm_source=badge)
-
-[![Throughput Graph](https://graphs.waffle.io/yeungegs/AirBnB_clone/throughput.svg)](https://waffle.io/yeungegs/AirBnB_clone/metrics/throughput)
 
 ## Getting Started
 
