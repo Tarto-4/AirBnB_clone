@@ -13,7 +13,7 @@ class HBNBCommand(Cmd):
     """
 
     prompt = "(hbnb) "
-
+    
     def do_quit(self, inp):
         """
         Quits the command interpreter.
@@ -162,8 +162,4 @@ class HBNBCommand(Cmd):
             return
 
         if args[2] in ("id", "created_at", "updated_at"):
-            print("** cannot update reserved attributes **")
-            return
-
-        try:
-            #
+            
