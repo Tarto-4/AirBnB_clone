@@ -76,4 +76,4 @@ class BaseModel:
             if isinstance(value, datetime):
                 data[key] = value.isoformat()
         return data
-      
+        
