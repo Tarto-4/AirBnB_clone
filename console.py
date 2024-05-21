@@ -50,7 +50,7 @@ class CommandInterpreter:
             return
 
         try:
-            obj = eval(f"{args[0]}()")  # Dynamic class creation (assuming correct class name)
+            obj = eval(f"{args[0]}()")
         except NameError:
             print("** class doesn't exist **")
             return
@@ -135,10 +135,8 @@ class CommandInterpreter:
 
         attr_name, value = args[2], args[3]
 
-        # Disallow updating reserved attributes
         if attr_name in ("id", "created_at", "updated_at"):
             print("** can't update attribute **")
             return
 
-        # Cast value based on expected attribute type (assuming string, int, or float)
         try:
