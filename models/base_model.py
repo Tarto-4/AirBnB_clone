@@ -1,50 +1,63 @@
 #!/usr/bin/python3
-from datetime import datetime
 import uuid
-from models.engine import file_storage
-import models
+from datetime import datetime
+
 
 class BaseModel:
-    """A base class for all other models in the project"""
+    """
+    Base class for all models in the project
+    """
 
-    id = str(uuid.uuid4())  # Generate a unique ID
-    created_at = datetime.utcnow()  # Time of object creation
-    updated_at = datetime.utcnow()  # Time of object update
-
-    def __init__(self, *args, **kwargs):
+    def __init__(self, id=None, created_at=None, updated_at=None, **kwargs):
         """
-        Initializes the base model.
-        - If args are not empty, assigns them to corresponding attributes.
-        - If kwargs contains an "id" key, assigns it to the self.id attribute.
-        - Otherwise, creates a new id and updates created_at and updated_at.
-        - Calls storage.new(self) to add the object to the storage.
-        """
-        if args or kwargs:
-            for key, value in kwargs.items():
-                if key != "__class__":
-                    setattr(self, key, value)
-            if "id" in kwargs:
-                self.id = kwargs["id"]
-            else:
-                self.id = str(uuid.uuid4())
-            self.created_at = datetime.utcnow()
-            self.updated_at = datetime.utcnow()
-        else:
-            models.storage.new(self)
+        Initializes the base model
 
-    def __str__(self):
-        """Returns a string representation of the object"""
-        return f"[BaseModel] ({self.id}) {self.__class__.__name__}"
+        Args:
+            id (str, optional): Unique identifier for the object. Defaults to None.
+            created_at (datetime, optional): Creation timestamp. Defaults to None.
+            updated_at (datetime, optional): Update timestamp. Defaults to None.
+            **kwargs (dict): Additional keyword arguments passed to the constructor.
+        """
+        self.id = id or str(uuid4())
+        self.created_at = created_at or datetime.now()
+        self.updated_at = updated_at or self.created_at
+
+        self.__dict__.update(kwargs)
+
+    @staticmethod
+    def from_dict(cls, dictionary):
+        """
+        Creates a new instance of the class from a dictionary
+
+        Args:
+            cls (class): The class to instantiate
+            dictionary (dict): A dictionary containing the object attributes
+
+        Returns:
+            BaseModel: A new instance of the class with the attributes set from the dictionary
+        """
+        instance = cls(**dictionary)
+        instance.id = instance.id or str(uuid4())
+        instance.created_at = datetime.fromisoformat(dictionary.get('created_at'))
+        instance.updated_at = datetime.fromisoformat(dictionary.get('updated_at'))
+        return instance
 
     def save(self):
-        """Updates updated_at attribute and calls storage.save() to persist the object"""
-        self.updated_at = datetime.utcnow()
-        models.storage.save(self)
+        """
+        Updates the current datetime for updated_at and saves the object to storage
+        """
+        self.updated_at = datetime.now()
+        FileStorage().save()
 
-    def to_dict(self):
-        """Returns a dictionary representation of the object"""
-        object_dict = self.__dict__.copy()
-        object_dict["created_at"] = object_dict["created_at"].isoformat()
-        object_dict["updated_at"] = object_dict["updated_at"].isoformat()
-        object_dict["__class__"] = self.__class__.__name__
-        return object_dict
+    def to_json(self):
+        """
+        Returns a dictionary representation of the object
+        """
+        return self.__dict__
+
+    def __str__(self):
+        """
+        Returns a string representation of the object
+        """
+        class_name = self.__class__.__name__
+        return f"[{class_name}] ({self.id}) {self.__dict__}"
