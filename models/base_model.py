@@ -2,60 +2,49 @@
 from datetime import datetime
 import uuid
 from models.engine import file_storage
-
+import models
 
 class BaseModel:
-    """
-    BaseModel class providing common attributes (id, created_at, updated_at) and methods
-    for other models to inherit.
-    """
+    """A base class for all other models in the project"""
+
+    id = str(uuid.uuid4())  # Generate a unique ID
+    created_at = datetime.utcnow()  # Time of object creation
+    updated_at = datetime.utcnow()  # Time of object update
 
     def __init__(self, *args, **kwargs):
         """
-        Initializes a new BaseModel instance.
-
-        Args:
-            *args (optional): Unused positional arguments.
-            **kwargs (dict, optional): Keyword arguments used to set attributes.
-                - If provided, sets attributes based on key-value pairs.
-                  Excludes the "__class__" key.
-                - If not provided, creates a new instance with a unique ID,
-                  current datetime for created_at and updated_at.
-                - If it's a new instance (not from a dictionary representation),
-                  adds a call to the method new(self) on storage.
-
-        Raises:
-            ValueError: If both *args and **kwargs are provided.
+        Initializes the base model.
+        - If args are not empty, assigns them to corresponding attributes.
+        - If kwargs contains an "id" key, assigns it to the self.id attribute.
+        - Otherwise, creates a new id and updates created_at and updated_at.
+        - Calls storage.new(self) to add the object to the storage.
         """
-
-        if args and kwargs:
-            raise ValueError("Received both positional and keyword arguments")
-
-        if kwargs:
-            self.__dict__.update((key, value) for key, value in kwargs.items() if key != "__class__")
-            for key, value in self.__dict__.items():
-                if key in ("created_at", "updated_at"):
-                    self.__dict__[key] = datetime.fromisoformat(value)
+        if args or kwargs:
+            for key, value in kwargs.items():
+                if key != "__class__":
+                    setattr(self, key, value)
+            if "id" in kwargs:
+                self.id = kwargs["id"]
+            else:
+                self.id = str(uuid.uuid4())
+            self.created_at = datetime.utcnow()
+            self.updated_at = datetime.utcnow()
         else:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = self.created_at
-            storage.new(self)
+            models.storage.new(self)
 
     def __str__(self):
-        """
-        Returns a human-readable string representation of the object,
-        including class name, ID, and attributes as a dictionary.
-        """
-
-        return f"[{' '.join(self.__class__.__name__.split(' '))}] ({self.id}) {self.__dict__}"
+        """Returns a string representation of the object"""
+        return f"[BaseModel] ({self.id}) {self.__class__.__name__}"
 
     def save(self):
-        """
-        Updates the updated_at attribute of the object to the current datetime
-        and calls the storage.save() method to persist the object to the JSON file.
-        """
+        """Updates updated_at attribute and calls storage.save() to persist the object"""
+        self.updated_at = datetime.utcnow()
+        models.storage.save(self)
 
-        self.updated_at = datetime.now()
-        storage.
-        
+    def to_dict(self):
+        """Returns a dictionary representation of the object"""
+        object_dict = self.__dict__.copy()
+        object_dict["created_at"] = object_dict["created_at"].isoformat()
+        object_dict["updated_at"] = object_dict["updated_at"].isoformat()
+        object_dict["__class__"] = self.__class__.__name__
+        return object_dict
