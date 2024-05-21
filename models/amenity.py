@@ -1,20 +1,23 @@
 #!/usr/bin/python3
-"""
-Module that creates amenity
-"""
-
 from models.base_model import BaseModel
 
 
 class Amenity(BaseModel):
-    """class Amenity that inherits from BaseModel
-    public class attribute:
-    name: string - empty string
+    """
+    Class Amenity that inherits from BaseModel
+
+    Attributes:
+        name: string - empty string (public class attribute)
     """
 
     name = ""
 
     def __init__(self, *args, **kwargs):
-        """create new amenity
+        """
+        Creates a new Amenity instance
+
+        Args:
+            *args: Arguments passed to the parent class constructor
+            **kwargs: Keyword arguments passed to the parent class constructor
         """
         super().__init__(self, *args, **kwargs)
