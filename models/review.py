@@ -7,11 +7,13 @@ from models.base_model import BaseModel
 
 
 class Review(BaseModel):
-    """class review that inherits from BaseModel
-    Public class attributes:
-    place_id: string - empty string: it will be the Place.id
-    user_id: string - empty string: it will be the User.id
-    text: string - empty string
+    """
+    Class Review that inherits from BaseModel
+
+    Attributes:
+        place_id (str): ID of the Place the review belongs to
+        user_id (str): ID of the User who wrote the review
+        text (str): Text content of the review
     """
 
     place_id = ""
@@ -19,6 +21,12 @@ class Review(BaseModel):
     text = ""
 
     def __init__(self, *args, **kwargs):
-        """create new review
+        """
+        Creates a new Review instance
+
+        Args:
+            *args: Arguments passed to the parent class constructor
+            **kwargs: Keyword arguments passed to the parent class constructor
         """
         super().__init__(self, *args, **kwargs)
+
