@@ -8,20 +8,17 @@ from models.base_model import BaseModel
 
 class Amenity(BaseModel):
     """
-    Class Amenity that inherits from BaseModel
-
-    Attributes:
-        name: string - empty string (public class attribute)
+    Class representing an Amenity
     """
 
-    name = ""
+    name = str
 
     def __init__(self, *args, **kwargs):
         """
-        Creates a new Amenity instance
+        Initializes the Amenity object
 
         Args:
-            *args: Arguments passed to the parent class constructor
-            **kwargs: Keyword arguments passed to the parent class constructor
+            *args (optional): Arguments passed to the parent class constructor
+            **kwargs (dict): Keyword arguments for Amenity attributes
         """
         super().__init__(self, *args, **kwargs)
