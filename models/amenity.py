@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+"""
+A module for Ammenity
+"""
+
 from models.base_model import BaseModel
 
 
