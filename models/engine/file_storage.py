@@ -1,67 +1,40 @@
 #!/usr/bin/python3
 import json
 
-
 class FileStorage:
-    """
-    Class for serializing and deserializing instances to and from a JSON file.
-    """
+    """A class to serialize and deserialize BaseModels to/from a JSON file"""
 
-    __file_path = "file.json"  # Path to the JSON file
-    __objects = {}  # Dictionary to store objects by <class name>.id
+    __file_path: str = "file.json"  # Path to the JSON file
+    __objects: dict = {}  # Dictionary to hold objects (key: class name.id, value: object)
 
-    def all(self):
-        """
-        Returns the dictionary __objects.
-        """
-
-        return self.__objects
+    def all(self) -> dict:
+        """Returns the dictionary of all stored objects"""
+        return FileStorage.__objects
 
     def new(self, obj):
-        """
-        Sets the obj in __objects with key <obj class name>.id.
-        """
-
+        """Adds a new object to the storage dictionary"""
         key = f"{obj.__class__.__name__}.{obj.id}"
-        self.__objects[key] = obj
+        FileStorage.__objects[key] = obj
 
     def save(self):
-        """
-        Serializes __objects to the JSON file (path: __file_path).
-        """
+        """Serializes all objects in the storage to a JSON file"""
+        objects_dict = {key: value.to_dict() for key, value in FileStorage.__objects.items()}
+        with open(FileStorage.__file_path, "w") as file:
+            import json
 
-        with open(self.__file_path, "w") as f:
-            json.dump(self.__objects, f, indent=4)
+            json.dump(objects_dict, file)
 
     def reload(self):
-        """
-        Deserializes the JSON file to __objects (if it exists).
-        """
-
+        """Deserializes objects from a JSON file into the storage dictionary"""
         try:
-            with open(self.__file_path, "r") as f:
-                data = json.load(f)
-                for key, value in data.items():
-                    self.__objects[key] = self.instance(value)
+            with open(FileStorage.__file_path, "r") as file:
+                import json
+
+                objects_dict = json.load(file)
+                from models.base_model import BaseModel
+
+                FileStorage.__objects = {
+                    key: BaseModel(**value) for key, value in objects_dict.items()
+                }
         except FileNotFoundError:
-            pass  # Ignore if file doesn't exist
-
-    @staticmethod
-    def instance(data):
-        """
-        Returns a new instance of the class specified in the data dictionary.
-        """
-
-        class_name, id = data["__class__"], data["id"]
-        del data["__class__"]
-        del data["id"]
-        return globals()[class_name](**data)  # Use globals() to retrieve the class
-
-
-**models/__init__.py:**
-
-```python
-from models.engine import file_storage
-
-storage = file_storage.FileStorage()
-storage.reload()
+            pass  # Ignore if file doesn'  t exist
