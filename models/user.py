@@ -7,15 +7,21 @@ from models.base_model import BaseModel
 
 
 class User(BaseModel):
-    """a class User that inherits from BaseModel
+    """
+    Class representing a User
     """
 
-    email = ""
-    password = ""
-    first_name = ""
-    last_name = ""
+    email = str
+    password = str
+    first_name = str
+    last_name = str
 
     def __init__(self, *args, **kwargs):
-        """create new user
+        """
+        Initializes the User object
+
+        Args:
+            *args (optional): Arguments passed to the parent class constructor
+            **kwargs (dict): Keyword arguments for User attributes
         """
         super().__init__(self, *args, **kwargs)
