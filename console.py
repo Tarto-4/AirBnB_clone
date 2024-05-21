@@ -5,78 +5,73 @@ Entry point for the HBNB command interpreter.
 
 from cmd import Cmd
 from models import storage, BaseModel
+from models.base_model import BaseModel
+from models.storage import FileStorage
 
 
-class HBNBCommand(Cmd):
-    """
-    HBNB command interpreter class.
-    """
+class CommandInterpreter:
+    """Command interpreter for interacting with BaseModel objects."""
 
-    prompt = "(hbnb) "
-    
-    def do_quit(self, inp):
-        """
-        Quits the command interpreter.
-        """
-        print("Quitting HBNB, come back soon!")
-        exit()
+    storage = FileStorage()
 
-    def do_EOF(self, inp):
-        """
-        Quits the command interpreter (same as quit).
-        """
-        print("Quitting HBNB, come back soon!")
-        exit()
-
-    def emptyline(self):
-        """
-        Handles empty lines by passing without execution.
-        """
+    def __init__(self):
+        """Initializes the command interpreter."""
         pass
 
-    def do_create(self, inp):
-        """
-        Creates a new instance of BaseModel, saves it, and prints the id.
+    def execute(self, cmd_args):
+        """Executes a command based on the provided arguments.
+
+        Args:
+            cmd_args (list): A list of arguments representing the command and its options.
         """
 
-        args = inp.split()
+        if not cmd_args:
+            return
+
+        command, *args = cmd_args
+        if command == "create":
+            self.do_create(args)
+        elif command == "show":
+            self.do_show(args)
+        elif command == "destroy":
+            self.do_destroy(args)
+        elif command == "all":
+            self.do_all(args)
+        elif command == "update":
+            self.do_update(args)
+        else:
+            print("** Invalid command **")
+
+    def do_create(self, args):
+        """Creates a new instance of a BaseModel and saves it."""
 
         if not args:
             print("** class name missing **")
             return
 
         try:
-            new_obj = eval(args[0])()
+            obj = eval(f"{args[0]}()")  # Dynamic class creation (assuming correct class name)
         except NameError:
             print("** class doesn't exist **")
             return
 
-        storage.new(new_obj)
-        storage.save()
-        print(new_obj.id)
+        self.storage.new(obj)
+        self.storage.save()
+        print(obj.id)
 
-    def do_show(self, inp):
-        """
-        Prints the string representation of an instance.
-        """
-
-        args = inp.split()
+    def do_show(self, args):
+        """Shows the string representation of an instance based on class name and id."""
 
         if not args:
             print("** class name missing **")
             return
 
         try:
-            class_name = eval(args[0])
+            class_name, *id_args = args
+            obj = self.storage.all().get(f"{class_name}.{id_args[0]}")
         except NameError:
             print("** class doesn't exist **")
             return
-
-        if len(args) == 1:
-            print("** instance id missing **")
-            return
-
-        obj = storage.all().get(f"{class_name}.{args[1]}")
 
         if not obj:
             print("** no instance found **")
@@ -84,82 +79,66 @@ class HBNBCommand(Cmd):
 
         print(obj)
 
-    def do_destroy(self, inp):
-        """
-        Deletes an instance based on the class name and id.
-        """
-
-        args = inp.split()
+    def do_destroy(self, args):
+        """Deletes an instance based on class name and id."""
 
         if not args:
             print("** class name missing **")
             return
 
         try:
-            class_name = eval(args[0])
+            class_name, *id_args = args
+            obj = self.storage.all().get(f"{class_name}.{id_args[0]}")
         except NameError:
             print("** class doesn't exist **")
             return
-
-        if len(args) == 1:
-            print("** instance id missing **")
-            return
-
-        obj = storage.all().get(f"{class_name}.{args[1]}")
 
         if not obj:
             print("** no instance found **")
             return
 
-        storage.delete(obj)
-        storage.save()
-        print(None)  # Following convention to not print anything
+        self.storage.objects.pop(f"{class_name}.{id_args[0]}")
+        self.storage.save()
+        print(None)
 
-    def do_all(self, inp):
-        """
-        Prints all string representations of all instances.
-        """
+    def do_all(self, args):
+        """Prints all string representations of all instances, optionally filtered by class name."""
 
-        args = inp.split()
+        objects = self.storage.all().values()
+        if args and args[0]:
+            try:
+                class_name = args[0]
+                objects = [obj for obj in objects if isinstance(obj, eval(class_name))]
+            except NameError:
+                print("** class doesn't exist **")
+                return
 
-        if args and args[0] != "all":
-            print("** class doesn't exist **")
-            return
-
-        objects = storage.all().values()
         print([str(obj) for obj in objects])
 
-    def do_update(self, inp):
-        """
-        Updates an instance based on the class name and id.
-        """
+    def do_update(self, args):
+        """Updates an instance based on class name, id, attribute name, and value."""
 
-        args = inp.split()
-
-        if not args:
-            print("** class name missing **")
+        if len(args) < 4:
+            print("** attribute name missing **" if len(args) == 3 else "** value missing **")
             return
 
         try:
-            class_name = eval(args[0])
+            class_name, *id_args = args[:2]
+            obj = self.storage.all().get(f"{class_name}.{id_args[0]}")
         except NameError:
             print("** class doesn't exist **")
             return
-
-        if len(args) < 4:
-            if len(args) == 1:
-                print("** instance id missing **")
-            elif len(args) == 2:
-                print("** attribute name missing **")
-            elif len(args) == 3:
-                print("** value missing **")
-            return
-
-        obj = storage.all().get(f"{class_name}.{args[1]}")
 
         if not obj:
             print("** no instance found **")
             return
 
-        if args[2] in ("id", "created_at", "updated_at"):
-            
+        attr_name, value = args[2], args[3]
+
+        # Disallow updating reserved attributes
+        if attr_name in ("id", "created_at", "updated_at"):
+            print("** can't update attribute **")
+            return
+
+        # Cast value based on expected attribute type (assuming string, int, or float)
+        try:
