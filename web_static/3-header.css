@@ -1,0 +1,17 @@
+header {
+    background-color: white;
+    height: 70px;
+    width: 100%;
+    border-bottom: 1px solid #CCCCCC;
+    display: flex;
+    align-items: center; /* Vertically center the logo */
+}
+
+.logo {
+    height: 50px; /* Adjust to match logo height */
+    width: 50px;  /* Adjust to match logo width */
+    background-image: url("../images/logo.png");
+    background-repeat: no-repeat;
+    background-position: center left 20px; 
+    background-size: contain; /* Make sure the logo scales properly */
+}
