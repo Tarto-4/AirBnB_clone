@@ -141,7 +141,7 @@ This project is a closed and contributions are not accepted at this time.
 
 ## Team
 
- | [Thato Mongwe](https://github.com/tarto-4) <a target="_blank" href="https://twitter.com/egsy"> <img src="https://github.com/account" height="20"></a>
+ | [Thato Mongwe](https://github.com/tarto-4) <a target="_blank" href="https://x.com/THATOMongwe4"> <img src="https://github.com/account" height="20"></a>
 
 ## Resources
 * Readme template from GitHub https://guides.github.com/features/wikis/
