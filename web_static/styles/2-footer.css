@@ -1,0 +1,14 @@
+footer {
+    background-color: #00FF00; /* Green */
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* Required for absolute positioning */
+    bottom: 0;           /* Always sticks to the bottom */
+  }
+  
+  footer p {
+    font-size: 20px;
+    margin: 0;           /* Remove default margin */
+  }  

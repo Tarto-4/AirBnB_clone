@@ -1,0 +1,12 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif; /* Add default font for better readability */
+  }
+  
+  .content {
+    min-height: calc(100vh - 130px); /* Adjust for header/footer heights */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }  
